@@ -6,4 +6,6 @@
     <color name="colorDefaultButtonSignIn">#e18422</color>
     <color name="colorPressedButtonSignIn">#ee6211</color>
     <color name="colorButtonSignInText">#ffffff</color>
+    <color name="colorButtonUnEnable">#c9bcbd</color>
+    <color name="colorButtonStroke">#332323</color>
 </resources>

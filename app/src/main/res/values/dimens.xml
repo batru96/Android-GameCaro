@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="title_size">36sp</dimen>
+    <dimen name="title_size">48sp</dimen>
     <dimen name="padding_button">8dp</dimen>
     <dimen name="signInMarginWidth">8dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="paddingLayout">8dp</dimen>
+    <dimen name="buttonRadius">4dp</dimen>
 </resources>

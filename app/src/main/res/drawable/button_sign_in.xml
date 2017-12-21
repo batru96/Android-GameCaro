@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@color/colorPressedButtonSignIn" android:state_pressed="true" />
-    <item android:drawable="@color/colorDefaultButtonSignIn" android:state_pressed="false" />
+    <item android:drawable="@drawable/button_pressed_sign_in"
+        android:state_pressed="true" />
+    <item android:drawable="@drawable/button_default_sign_in"
+        android:state_pressed="false" />
 </selector>
