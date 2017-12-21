@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryDark">#b70906</color>
+    <color name="colorAccent">#ffffff</color>
     <color name="colorDefaultButtonSignIn">#e18422</color>
     <color name="colorPressedButtonSignIn">#ee6211</color>
     <color name="colorButtonSignInText">#ffffff</color>
     <color name="colorButtonUnEnable">#c9bcbd</color>
     <color name="colorButtonStroke">#332323</color>
+    <color name="colorBackground">#f43236</color>
 </resources>
