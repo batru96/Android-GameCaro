@@ -18,11 +18,8 @@ class UserFragment : Fragment() {
             User("Bucky", "bucky@gmail.com", 200),
             User("Bacon", "bacon@gmail.com", 100),
             User("Bucky", "bucky@gmail.com", 200),
-            User("Bacon", "bacon@gmail.com", 100),
-            User("Bucky", "bucky@gmail.com", 200),
-            User("Bacon", "bacon@gmail.com", 100),
-            User("Bucky", "bucky@gmail.com", 200),
             User("Bacon", "bacon@gmail.com", 100))
+
     private lateinit var mAdapter: UserAdapter
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var mDivider: DividerItemDecoration
