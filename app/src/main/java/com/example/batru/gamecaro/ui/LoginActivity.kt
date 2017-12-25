@@ -6,16 +6,23 @@ import android.widget.Button
 import com.example.batru.gamecaro.R
 import com.example.batru.gamecaro.fragments.SignInFragment
 import com.example.batru.gamecaro.fragments.SignUpFragment
+import com.github.nkzawa.socketio.client.IO
+import com.github.nkzawa.socketio.client.Socket
 import kotlinx.android.synthetic.main.activity_login.*
+import java.net.URISyntaxException
 
 class LoginActivity : BaseActivity() {
 
+    private val IP_ADDRESS = "192.168.20.122:3000"
+
     private var isSignIn = true
+    private var mSocket: Socket = IO.socket("http://$IP_ADDRESS")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        mSocket.connect()
         addDefaultSignIn()
     }
 
@@ -54,5 +61,11 @@ class LoginActivity : BaseActivity() {
         fragmentManager.beginTransaction().add(R.id.frame_content, SignInFragment()).commit()
         setButtonBackground(btnSignInFragment, R.drawable.button_un_enable)
         btnSignInFragment.isEnabled = false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mSocket.disconnect()
+        mSocket.off()
     }
 }

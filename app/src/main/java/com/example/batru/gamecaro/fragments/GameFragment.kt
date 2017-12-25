@@ -42,8 +42,14 @@ class GameFragment : Fragment() {
             button.setBackgroundResource(R.drawable.button_sign_in)
             button.layoutParams = params
             layout.addView(button)
+
+            button.setOnClickListener { onButtonClicked(button) }
         }
 
         return layout
+    }
+
+    private fun onButtonClicked(button: Button) {
+        button.setBackgroundResource(R.drawable.button_player_a)
     }
 }

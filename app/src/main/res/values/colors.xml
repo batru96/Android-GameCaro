@@ -9,4 +9,6 @@
     <color name="colorButtonUnEnable">#c9bcbd</color>
     <color name="colorButtonStroke">#332323</color>
     <color name="colorBackground">#f43236</color>
+    <color name="colorPlayerA">#3F51B5</color>
+    <color name="colorPlayerB">#56d724</color>
 </resources>

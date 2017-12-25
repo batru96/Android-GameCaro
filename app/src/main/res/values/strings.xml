@@ -18,4 +18,9 @@
     <string name="error_field_required">This field is required</string>
     <string name="register">Register</string>
     <string name="points">Points: %1$d</string>
+    <string name="exit">Exit</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="check_input">Please check your input.</string>
+    <string name="password_incorrect">Password is incorrect</string>
 </resources>
