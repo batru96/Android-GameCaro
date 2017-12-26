@@ -1,28 +1,20 @@
 package com.example.batru.gamecaro.fragments
 
-import android.app.Fragment
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.VolleyError
-import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.example.batru.gamecaro.R
-import com.example.batru.gamecaro.R.string.register
 import com.example.batru.gamecaro._global.VolleySingleton
 import com.example.batru.gamecaro.ui.BaseActivity
 import org.json.JSONObject
 import java.io.UnsupportedEncodingException
-import java.util.HashMap
 
 class SignUpFragment : BaseFragment() {
     private val TAG = "SignUpFragment"
@@ -101,7 +93,5 @@ class SignUpFragment : BaseFragment() {
         }
     }
 
-    private fun isStringsBlank(vararg strings: String): Boolean {
-        return strings.any { it.isBlank() }
-    }
+
 }

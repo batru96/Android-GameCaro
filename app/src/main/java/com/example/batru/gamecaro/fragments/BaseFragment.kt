@@ -5,11 +5,13 @@ import android.content.Context
 import android.os.Message
 import android.widget.Toast
 
-/**
- * Created by batru on 12/25/17.
- */
 open class BaseFragment: Fragment() {
     fun toast(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
+
+    fun isStringsBlank(vararg strings: String): Boolean {
+        return strings.any { it.isBlank() }
+    }
+
 }
