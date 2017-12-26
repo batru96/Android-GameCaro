@@ -15,11 +15,9 @@
         android:layout_weight="2"
         tools:layout="@layout/fragment_users" />
 
-    <fragment
-        android:id="@+id/fragmentGame"
-        android:name="com.example.batru.gamecaro.fragments.GameFragment"
+    <FrameLayout
+        android:id="@+id/frameGameFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="8"
-        tools:layout="@layout/fragment_game" />
+        android:layout_weight="8" />
 </LinearLayout>

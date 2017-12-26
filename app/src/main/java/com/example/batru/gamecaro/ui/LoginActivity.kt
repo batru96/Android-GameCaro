@@ -2,12 +2,13 @@ package com.example.batru.gamecaro.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import com.example.batru.gamecaro.R
+import com.example.batru.gamecaro.`interface`.IUserFragment
 import com.example.batru.gamecaro.fragments.SignInFragment
 import com.example.batru.gamecaro.fragments.SignUpFragment
+import com.example.batru.gamecaro.fragments.UserFragment
 import com.github.nkzawa.emitter.Emitter
 import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
@@ -23,6 +24,7 @@ class LoginActivity : BaseActivity() {
     private val labelSignInSuccess = "SERVER_REPLY_SIGN_IN_SUCCESS"
     private val labelSignInFailed = "SERVER_REPLY_SIGN_IN_FAILED"
     private var isSignInFragment = true
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +45,7 @@ class LoginActivity : BaseActivity() {
     private val onSignInSuccessListener = Emitter.Listener { args ->
         runOnUiThread {
             val users = args[0] as JSONArray
-            val intent = Intent(this, GameScreenActivity::class.java)
+            val intent = Intent(this, GameActivity::class.java)
             intent.putExtra("USERS", users.toString())
             startActivity(intent)
         }
