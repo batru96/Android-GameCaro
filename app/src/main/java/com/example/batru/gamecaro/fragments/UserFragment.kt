@@ -10,13 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.example.batru.gamecaro.R
-import com.example.batru.gamecaro.`interface`.IUserFragment
 import com.example.batru.gamecaro.adapter.UserAdapter
 import com.example.batru.gamecaro.models.User
 import com.example.batru.gamecaro.ui.GameActivity
-import kotlinx.android.synthetic.main.fragment_users.*
-import kotlinx.android.synthetic.main.fragment_users.view.*
-import java.util.function.Predicate
 
 class UserFragment : Fragment() {
     private lateinit var mRecyclerUser: RecyclerView
@@ -54,7 +50,7 @@ class UserFragment : Fragment() {
         mAdapter.notifyItemRemoved(index)
     }
 
-    fun exit() {
+    private fun exit() {
         (activity as GameActivity).onBackPressed()
     }
 }

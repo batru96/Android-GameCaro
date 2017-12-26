@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.example.batru.gamecaro.R
 
-class GameFragment : Fragment() {
+class GameFragment : BaseFragment() {
     private lateinit var mLinearGame: LinearLayout
 
     private val MATCH_PARENT = -1
@@ -31,14 +31,14 @@ class GameFragment : Fragment() {
     }
 
     private fun drawButtons(): LinearLayout {
-        val layout = LinearLayout(context)
+        val layout = LinearLayout(activity)
         layout.orientation = LinearLayout.HORIZONTAL
         val layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT, 1.0f)
         layout.layoutParams = layoutParams
 
         val params = LinearLayout.LayoutParams(0, WRAP_CONTENT, 1.0f)
         for (i in 0 until NUMS_BUTTON) {
-            val button = Button(context)
+            val button = Button(activity)
             button.setBackgroundResource(R.drawable.button_sign_in)
             button.layoutParams = params
             layout.addView(button)

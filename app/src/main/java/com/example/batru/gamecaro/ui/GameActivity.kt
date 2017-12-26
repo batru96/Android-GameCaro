@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import com.example.batru.gamecaro.R
+import com.example.batru.gamecaro.fragments.GameFragment
 import com.example.batru.gamecaro.fragments.UserFragment
 import com.example.batru.gamecaro.models.User
 import com.github.nkzawa.emitter.Emitter
@@ -14,6 +15,7 @@ import org.json.JSONObject
 
 class GameActivity : AppCompatActivity() {
     private val TAG = "GameActivity"
+    private val gameFragmentTag = "GameFragment"
     private val labelOnUserSignIn = "SERVER_SEND_USER_SIGN_IN_SUCCESS"
     private val labelSignOut = "USER_SIGN_OUT"
     private val labelOnUserSignOut = "SERVER_SEND_EMAIL_SIGN_OUT"
@@ -29,6 +31,7 @@ class GameActivity : AppCompatActivity() {
 
         mUserFragment = fragmentManager.findFragmentById(R.id.fragmentUser) as UserFragment
         updateUserFragment()
+
     }
 
     private val onUserSignOutLister = Emitter.Listener { args ->
@@ -45,6 +48,16 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    private fun toggleGameFragment(isShow: Boolean) {
+        val transaction = fragmentManager.beginTransaction()
+        if (isShow) {
+            transaction.add(R.id.frameGameFragment, GameFragment(), gameFragmentTag)
+        } else {
+            transaction.remove(fragmentManager.findFragmentByTag(gameFragmentTag))
+        }
+        transaction.commit()
+    }
+
     private fun updateUserFragment() {
         val users = try {
             JSONArray(intent.getStringExtra("USERS"))
@@ -53,10 +66,15 @@ class GameActivity : AppCompatActivity() {
             JSONArray("[]")
         }
         if (users.length() > 0) {
-            for (i in 0 until users.length()) {
+            /*
+            * for (i in 0 until users.length()) {
                 val obj = users.getJSONObject(i)
                 mUserFragment.addNewUser(getUserFromJsonObject(obj))
             }
+            * */
+            (0 until users.length())
+                    .map { users.getJSONObject(it) }
+                    .forEach { mUserFragment.addNewUser(getUserFromJsonObject(it)) }
         }
     }
 
@@ -86,7 +104,6 @@ class GameActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "DESTROY")
         LoginActivity.mSocket.emit(labelSignOut)
         LoginActivity.mSocket.off(labelOnUserSignOut)
         LoginActivity.mSocket.off(labelOnUserSignIn)
