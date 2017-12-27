@@ -23,4 +23,11 @@
 
     <string name="check_input">Please check your input.</string>
     <string name="password_incorrect">Password is incorrect</string>
+    <string name="dialog_waiting_player">A random player is waiting for you</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="denied_request">Sorry, he/she denied your request</string>
+    <string name="fight_now">Fight, now!</string>
+    <string name="send_a_request">Send he/she a request?</string>
+    <string name="cannot_send_a_request">You\'re idiot</string>
 </resources>

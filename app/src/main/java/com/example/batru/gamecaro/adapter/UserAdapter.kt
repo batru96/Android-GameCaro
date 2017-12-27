@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import com.example.batru.gamecaro.R
 import com.example.batru.gamecaro.`interface`.IUserHandler
 import com.example.batru.gamecaro.models.User
@@ -20,12 +19,21 @@ class UserAdapter(private var context: Context, private var users: ArrayList<Use
         this.listener = listener
     }
 
+    private fun setEnableView(view: View, isEnable: Boolean) {
+        view.isEnabled = isEnable
+    }
+
     override fun onBindViewHolder(holder: ItemHolder?, position: Int) {
         val user = users[position]
         holder!!.tvName.text = user.Name
         holder.tvEmail.text = user.Email
         val pointsStr = context.resources.getString(R.string.points, user.Points)
         holder.tvPoints.text = pointsStr
+
+        if (user.Playing) {
+            holder.itemView.setBackgroundResource(R.drawable.button_un_enable)
+        }
+        setEnableView(holder.itemView, isEnable = !user.Playing)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ItemHolder {
@@ -38,7 +46,6 @@ class UserAdapter(private var context: Context, private var users: ArrayList<Use
 
     inner class ItemHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         override fun onClick(v: View?) {
-            Toast.makeText(context, "Hello moi nguoi", Toast.LENGTH_SHORT).show()
             listener!!.clickListener(v!!, layoutPosition)
         }
 
