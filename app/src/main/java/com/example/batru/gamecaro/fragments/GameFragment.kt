@@ -1,20 +1,20 @@
 package com.example.batru.gamecaro.fragments
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
 import com.example.batru.gamecaro.R
 
 class GameFragment : BaseFragment() {
     private lateinit var mLinearGame: LinearLayout
 
-    private val MATCH_PARENT = -1
-    private val WRAP_CONTENT = -2
-    private val NUMS_BUTTON = 20
-    private val NUMS_LAYOUT = 13
+    private val matchParent = -1
+    private val wrapContent = -2
+    private val numButtons = 20
+    private val numLayouts = 13
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater!!.inflate(R.layout.fragment_game, container, false)
@@ -24,7 +24,7 @@ class GameFragment : BaseFragment() {
     }
 
     private fun drawLayouts(rootView: View) {
-        for (i in 0 until NUMS_LAYOUT) {
+        for (i in 0 until numLayouts) {
             mLinearGame = rootView.findViewById(R.id.linearGame)
             mLinearGame.addView(drawButtons())
         }
@@ -33,11 +33,11 @@ class GameFragment : BaseFragment() {
     private fun drawButtons(): LinearLayout {
         val layout = LinearLayout(activity)
         layout.orientation = LinearLayout.HORIZONTAL
-        val layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT, 1.0f)
+        val layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent, 1.0f)
         layout.layoutParams = layoutParams
 
-        val params = LinearLayout.LayoutParams(0, WRAP_CONTENT, 1.0f)
-        for (i in 0 until NUMS_BUTTON) {
+        val params = LinearLayout.LayoutParams(0, wrapContent, 1.0f)
+        for (i in 0 until numButtons) {
             val button = Button(activity)
             button.setBackgroundResource(R.drawable.button_sign_in)
             button.layoutParams = params

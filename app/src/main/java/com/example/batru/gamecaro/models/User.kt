@@ -4,6 +4,7 @@ class User(name: String = "", email: String = "", points: Int = 0) {
     private var name: String = name
     private var email: String = email
     private var points: Int = points
+    private var isPlaying = false
 
     var Name: String
         get() = name
@@ -21,5 +22,11 @@ class User(name: String = "", email: String = "", points: Int = 0) {
         get() = points
         set(value) {
             points = value
+        }
+
+    var IsPlaying: Boolean
+        get() = this.isPlaying
+        set(value) {
+            isPlaying = value
         }
 }
