@@ -26,8 +26,11 @@ class GameActivity : BaseActivity() {
     private val labelUserALeaveRoom = "USER_A_LEAVE_ROOM"
 
     private lateinit var mUserFragment: UserFragment
+
     companion object {
         var mEmail: String = ""
+        val tagBundlePlayerA = "BUNDLE_PLAYER_A"
+        val tagBundleRoom = "BUNDLE_ROOM"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +82,7 @@ class GameActivity : BaseActivity() {
                         map.put("isAccept", true)
                         mUserFragment.enableRecyclerView(false)
                         mSocket.emit(labelReplyRequest, JSONObject(map))
-                        toggleGameFragment(true)
+                        toggleGameFragment(isShow = true, isPlayerA = true, room = room)
                     }
             dialog.show()
         }
@@ -95,8 +98,7 @@ class GameActivity : BaseActivity() {
                 val dialog = AlertDialog.Builder(this)
                         .setTitle(resources.getString(R.string.fight_now))
                         .setPositiveButton("OK") { _, _ ->
-                            mSocket.emit(labelUserALeaveRoom, room)
-                            toggleGameFragment(true)
+                            toggleGameFragment(isShow = true, isPlayerA = false, room = room)
                             mUserFragment.enableRecyclerView(false)
                         }
                 dialog.show()
@@ -112,10 +114,15 @@ class GameActivity : BaseActivity() {
         }
     }
 
-    private fun toggleGameFragment(isShow: Boolean) {
+    private fun toggleGameFragment(isShow: Boolean, isPlayerA: Boolean, room: String = "") {
         val transaction = fragmentManager.beginTransaction()
         if (isShow) {
-            transaction.add(R.id.frameGameFragment, GameFragment(), gameFragmentTag)
+            val gameFragment = GameFragment()
+            val bundle = Bundle()
+            bundle.putBoolean(tagBundlePlayerA, isPlayerA)
+            bundle.putString(tagBundleRoom, room)
+            gameFragment.arguments = bundle
+            transaction.add(R.id.frameGameFragment, gameFragment, gameFragmentTag)
         } else {
             transaction.remove(fragmentManager.findFragmentByTag(gameFragmentTag))
         }

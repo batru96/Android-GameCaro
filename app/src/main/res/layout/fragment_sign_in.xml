@@ -42,6 +42,7 @@
             android:layout_marginBottom="@dimen/padding_button">
 
             <EditText
+                android:text="123456"
                 android:id="@+id/edtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
