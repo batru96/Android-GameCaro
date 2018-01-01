@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import com.example.batru.gamecaro.R
+import com.example.batru.gamecaro.models.PlayerState
 import com.example.batru.gamecaro.ui.GameActivity
 import com.example.batru.gamecaro.ui.LoginActivity.Companion.mSocket
 import com.github.nkzawa.emitter.Emitter
-import org.json.JSONException
 import org.json.JSONObject
 
 class GameFragment : BaseFragment() {
@@ -31,10 +31,6 @@ class GameFragment : BaseFragment() {
     private var isFirst = true
     private var mPlayerState = PlayerState.NOTHING
     private var mRoom = ""
-
-    private enum class PlayerState {
-        WAITING, PLAYING, NOTHING
-    }
 
     private val labelSendXAndY = "USER_SEND_X_Y_TO_ROOM"
     private val labelOnListenXAndY = "SERVER_SEND_X_Y_TO_ROOM"
@@ -141,9 +137,19 @@ class GameFragment : BaseFragment() {
         }
     }
 
-    private fun isWinner(button: Button): Boolean {
-        if (isWinningRow(button) && isWinningColumn(button))
-            return true
+    private fun isWinner(button: Button) {
+        if (isWinningRow(button) || isWinningColumn(button) || isWinningSlash(button)) {
+            toast(activity, "Thang roi ne")
+        }
+    }
+
+    private fun isWinningSlash(button: Button): Boolean {
+        val obj = JSONObject(button.tag.toString())
+        val x = obj.getInt("x")
+        val y = obj.getInt("y")
+
+
+
         return false
     }
 
@@ -188,14 +194,55 @@ class GameFragment : BaseFragment() {
     }
 
     private fun isWinningColumn(button: Button): Boolean {
-        return false
+        val obj = JSONObject(button.tag.toString())
+        val x = obj.getInt("x")
+        val y = obj.getInt("y")
+
+        var minY = y - 4
+        var maxY = y + 4
+        if (minY <= 0)
+            minY = 0
+        if (maxY >= numButtons - 1)
+            maxY = numButtons - 1
+
+        val booleans: ArrayList<Boolean> = arrayListOf()
+        for (index in minY..maxY) {
+            val layout = mRootView.findViewWithTag<LinearLayout>(index)
+            val mButton = layout.getChildAt(x) as Button
+            val buttonJSONObj = JSONObject(mButton.tag.toString())
+            try {
+                val name = buttonJSONObj.getString("name")
+                if (isFirst) {
+                    if (name == "A") {
+                        booleans.add(true)
+                    } else {
+                        booleans.add(false)
+                    }
+                } else {
+                    if (name == "B") {
+                        booleans.add(true)
+                    } else {
+                        booleans.add(false)
+                    }
+                }
+            } catch (e: Exception) {
+                booleans.add(false)
+            }
+        }
+
+        for (item in booleans) {
+            Log.d(mTagGameFragment, item.toString())
+        }
+        Log.d(mTagGameFragment, "-----------------------")
+        return checkBooleans(booleans)
     }
 
     private fun checkBooleans(booleans: ArrayList<Boolean>): Boolean {
         var sum = 0
         booleans.forEach { it ->
             if (it) {
-                if (++sum == 5) return true
+                if (++sum == 5)
+                    return true
             } else {
                 sum = 0
             }
