@@ -138,9 +138,44 @@ class GameFragment : BaseFragment() {
     }
 
     private fun isWinner(button: Button) {
-        if (isWinningRow(button) || isWinningColumn(button) || isWinningSlash(button)) {
+        if (isWinningRow(button) || isWinningColumn(button) || isWinningSlash(button) || isWinningBackSlash(button)) {
             toast(activity, "Thang roi ne")
         }
+    }
+
+    private fun isWinningBackSlash(button: Button): Boolean {
+        val obj = JSONObject(button.tag.toString())
+        var x = obj.getInt("x")
+        val xMin = if (x - 4 < 0) 0 else x - 4
+
+        var y = obj.getInt("y")
+        val yMin = if (y - 4 < 0) 0 else y - 4
+
+        val lamdaX = x - xMin
+        val lamdaY = y - yMin
+
+        if (lamdaX < lamdaY) {
+            x = xMin
+            y -= lamdaX
+        } else {
+            y = yMin
+            x -= lamdaY
+        }
+
+        // Di toi da 10 steps
+        val booleans: ArrayList<Boolean> = arrayListOf()
+        for (i in 0 until 10) {
+            if (x < numButtons && y < numLayouts) {
+                val layout = mRootView.findViewWithTag<LinearLayout>(y)
+                val mButton = layout.getChildAt(x) as Button
+                addValueToArray(mButton, booleans)
+                x++; y++
+            } else {
+                break
+            }
+        }
+
+        return checkBooleans(booleans)
     }
 
     private fun isWinningSlash(button: Button): Boolean {
@@ -162,12 +197,17 @@ class GameFragment : BaseFragment() {
             x -= lamdaY
         }
 
+        // Di toi da la 10 steps
         val booleans: ArrayList<Boolean> = arrayListOf()
-        while (x < numButtons && y > -1) {
-            val layout = mRootView.findViewWithTag<LinearLayout>(y)
-            val mButton = layout.getChildAt(x) as Button
-            addValueToArray(mButton, booleans)
-            x++; y--
+        for (i in 0 until 10) {
+            if (x < numButtons && y > -1) {
+                val layout = mRootView.findViewWithTag<LinearLayout>(y)
+                val mButton = layout.getChildAt(x) as Button
+                addValueToArray(mButton, booleans)
+                x++; y--
+            } else {
+                break
+            }
         }
         return checkBooleans(booleans)
     }
@@ -240,6 +280,12 @@ class GameFragment : BaseFragment() {
             }
         }
         return false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mSocket.off(labelOnListenXAndY)
+        mSocket.off(labelSendXAndY)
     }
 
 }
