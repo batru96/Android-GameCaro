@@ -145,12 +145,31 @@ class GameFragment : BaseFragment() {
 
     private fun isWinningSlash(button: Button): Boolean {
         val obj = JSONObject(button.tag.toString())
-        val x = obj.getInt("x")
-        val y = obj.getInt("y")
+        var x = obj.getInt("x")
+        val xMin = if (x - 4 < 0) 0 else x - 4
 
+        var y = obj.getInt("y")
+        val yMax = if (y + 4 > numLayouts - 1) numLayouts - 1 else y + 4
 
+        val lamdaX = x - xMin
+        val lamdaY = yMax - y
 
-        return false
+        if (lamdaX < lamdaY) {
+            x = xMin
+            y += lamdaX
+        } else {
+            y = yMax
+            x -= lamdaY
+        }
+
+        val booleans: ArrayList<Boolean> = arrayListOf()
+        while (x < numButtons && y > -1) {
+            val layout = mRootView.findViewWithTag<LinearLayout>(y)
+            val mButton = layout.getChildAt(x) as Button
+            addValueToArray(mButton, booleans)
+            x++; y--
+        }
+        return checkBooleans(booleans)
     }
 
     private fun isWinningRow(button: Button): Boolean {
@@ -159,37 +178,14 @@ class GameFragment : BaseFragment() {
         val y = obj.getInt("y")
 
         val layout = mRootView.findViewWithTag<LinearLayout>(y)
-        var minX = x - 4
-        var maxX = x + 4
-        if (minX <= 0)
-            minX = 0
-        if (maxX >= numButtons - 1)
-            maxX = numButtons - 1
+        val minX = if (x - 4 < 0) 0 else x - 4
+        val maxX = if (x + 4 >= numButtons) numButtons - 1 else x + 4
 
         val booleans: ArrayList<Boolean> = arrayListOf()
         for (index in minX..maxX) {
             val mButton = layout.getChildAt(index) as Button
-            val buttonJSONObj = JSONObject(mButton.tag.toString())
-            try {
-                val name = buttonJSONObj.getString("name")
-                if (isFirst) {
-                    if (name == "A") {
-                        booleans.add(true)
-                    } else {
-                        booleans.add(false)
-                    }
-                } else {
-                    if (name == "B") {
-                        booleans.add(true)
-                    } else {
-                        booleans.add(false)
-                    }
-                }
-            } catch (e: Exception) {
-                booleans.add(false)
-            }
+            addValueToArray(mButton, booleans)
         }
-
         return checkBooleans(booleans)
     }
 
@@ -198,43 +194,39 @@ class GameFragment : BaseFragment() {
         val x = obj.getInt("x")
         val y = obj.getInt("y")
 
-        var minY = y - 4
-        var maxY = y + 4
-        if (minY <= 0)
-            minY = 0
-        if (maxY >= numButtons - 1)
-            maxY = numButtons - 1
+        val minY = if (y - 4 <= 0) 0 else y - 4
+        val maxY = if (y + 4 >= numLayouts) numLayouts - 1 else y + 4
 
         val booleans: ArrayList<Boolean> = arrayListOf()
         for (index in minY..maxY) {
             val layout = mRootView.findViewWithTag<LinearLayout>(index)
             val mButton = layout.getChildAt(x) as Button
-            val buttonJSONObj = JSONObject(mButton.tag.toString())
-            try {
-                val name = buttonJSONObj.getString("name")
-                if (isFirst) {
-                    if (name == "A") {
-                        booleans.add(true)
-                    } else {
-                        booleans.add(false)
-                    }
-                } else {
-                    if (name == "B") {
-                        booleans.add(true)
-                    } else {
-                        booleans.add(false)
-                    }
-                }
-            } catch (e: Exception) {
-                booleans.add(false)
-            }
+            addValueToArray(mButton, booleans)
         }
 
-        for (item in booleans) {
-            Log.d(mTagGameFragment, item.toString())
-        }
-        Log.d(mTagGameFragment, "-----------------------")
         return checkBooleans(booleans)
+    }
+
+    private fun addValueToArray(button: Button, booleans: ArrayList<Boolean>) {
+        val buttonJSONObj = JSONObject(button.tag.toString())
+        try {
+            val name = buttonJSONObj.getString("name")
+            if (isFirst) {
+                if (name == "A") {
+                    booleans.add(true)
+                } else {
+                    booleans.add(false)
+                }
+            } else {
+                if (name == "B") {
+                    booleans.add(true)
+                } else {
+                    booleans.add(false)
+                }
+            }
+        } catch (e: Exception) {
+            booleans.add(false)
+        }
     }
 
     private fun checkBooleans(booleans: ArrayList<Boolean>): Boolean {

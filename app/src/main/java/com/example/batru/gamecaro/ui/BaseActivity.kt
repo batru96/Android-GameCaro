@@ -6,7 +6,7 @@ import android.widget.Toast
 open class BaseActivity : AppCompatActivity() {
 
     companion object {
-        val IP_ADDRESS = "http://192.168.43.180:3000"
+        val IP_ADDRESS = "http://192.168.20.122:3000"
     }
 
     fun toast(message: String) {
