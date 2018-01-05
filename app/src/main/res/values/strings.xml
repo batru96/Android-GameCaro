@@ -30,4 +30,5 @@
     <string name="fight_now">Fight, now!</string>
     <string name="send_a_request">Send he/she a request?</string>
     <string name="cannot_send_a_request">You\'re idiot</string>
+    <string name="dialog_cancel_message">The game is playing. Do you really want to lose?</string>
 </resources>

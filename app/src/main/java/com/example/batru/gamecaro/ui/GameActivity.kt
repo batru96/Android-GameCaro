@@ -3,7 +3,9 @@ package com.example.batru.gamecaro.ui
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import android.view.View
 import com.example.batru.gamecaro.R
+import com.example.batru.gamecaro.`interface`.IUserFragment
 import com.example.batru.gamecaro.fragments.GameFragment
 import com.example.batru.gamecaro.fragments.UserFragment
 import com.example.batru.gamecaro.models.User
@@ -13,17 +15,19 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class GameActivity : BaseActivity() {
+class GameActivity : BaseActivity(), IUserFragment {
     private val tag = "GameActivity"
     private val gameFragmentTag = "GameFragment"
 
     private val labelOnUserSignIn = "SERVER_SEND_USER_SIGN_IN_SUCCESS"
-    private val labelSignOut = "USER_SIGN_OUT"
     private val labelOnUserSignOut = "SERVER_SEND_EMAIL_SIGN_OUT"
     private val labelOnListenRequest = "SERVER_SEND_REQUEST_FROM_A_TO_B"
+    private val labelOnUserLeavesGameRoom ="SERVER_SEND_USER_LEAVES_GAME_ROOM"
+    private val labelSignOut = "USER_SIGN_OUT"
     private val labelReplyRequest = "USER_B_REPLY_REQUEST"
-    private val labelReceiveResultRequest = "SERVER_SEND_REPLY_FROM_B_TO_A"
+    private val labelOnReceiveResultRequest = "SERVER_SEND_REPLY_FROM_B_TO_A"
     private val labelUserALeaveRoom = "USER_A_LEAVE_ROOM"
+    private val labelUserLeavesGameRoom = "USER_LEAVES_GAME_ROOM"
 
     private lateinit var mUserFragment: UserFragment
 
@@ -33,6 +37,8 @@ class GameActivity : BaseActivity() {
         val tagBundleRoom = "BUNDLE_ROOM"
     }
 
+    var isPlaying = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_screen)
@@ -40,11 +46,20 @@ class GameActivity : BaseActivity() {
         mSocket.on(labelOnUserSignIn, onUserSignInListener)
         mSocket.on(labelOnUserSignOut, onUserSignOutLister)
         mSocket.on(labelOnListenRequest, onListenRequest)
-        mSocket.on(labelReceiveResultRequest, onReceiveResultRequest)
+        mSocket.on(labelOnReceiveResultRequest, onReceiveResultRequest)
+        mSocket.on(labelOnUserLeavesGameRoom, onUserLeaveGameRoom)
 
         mUserFragment = fragmentManager.findFragmentById(R.id.fragmentUser) as UserFragment
         updateUserFragment()
+    }
 
+    private val onUserLeaveGameRoom = Emitter.Listener {
+        runOnUiThread {
+            if (isPlaying) {
+                toast("oops. He/She leaves your room. You win")
+                leavesRoom()
+            }
+        }
     }
 
     private val onUserSignOutLister = Emitter.Listener { args ->
@@ -95,10 +110,10 @@ class GameActivity : BaseActivity() {
             val room = obj.getString("room")
 
             if (isAccept) {
+                toggleGameFragment(isShow = true, isPlayerA = false, room = room)
                 val dialog = AlertDialog.Builder(this)
                         .setTitle(resources.getString(R.string.fight_now))
                         .setPositiveButton("OK") { _, _ ->
-                            toggleGameFragment(isShow = true, isPlayerA = false, room = room)
                             mUserFragment.enableRecyclerView(false)
                         }
                 dialog.show()
@@ -114,7 +129,7 @@ class GameActivity : BaseActivity() {
         }
     }
 
-    private fun toggleGameFragment(isShow: Boolean, isPlayerA: Boolean, room: String = "") {
+    private fun toggleGameFragment(isShow: Boolean, isPlayerA: Boolean = true, room: String = "") {
         val transaction = fragmentManager.beginTransaction()
         if (isShow) {
             val gameFragment = GameFragment()
@@ -123,8 +138,12 @@ class GameActivity : BaseActivity() {
             bundle.putString(tagBundleRoom, room)
             gameFragment.arguments = bundle
             transaction.add(R.id.frameGameFragment, gameFragment, gameFragmentTag)
+            isPlaying = true
+            mUserFragment.mCancelButton.visibility = View.VISIBLE
         } else {
             transaction.remove(fragmentManager.findFragmentByTag(gameFragmentTag))
+            isPlaying = false
+            mUserFragment.mCancelButton.visibility = View.INVISIBLE
         }
         transaction.commit()
     }
@@ -182,7 +201,26 @@ class GameActivity : BaseActivity() {
         mSocket.emit(labelSignOut)
         mSocket.off(labelOnUserSignOut)
         mSocket.off(labelOnUserSignIn)
-        mSocket.off(labelReceiveResultRequest)
+        mSocket.off(labelOnReceiveResultRequest)
         mSocket.off(labelOnListenRequest)
+        mSocket.off(labelOnUserLeavesGameRoom)
+    }
+
+    override fun cancelGame() {
+        val dialog = android.app.AlertDialog.Builder(this)
+                .setTitle(resources.getString(R.string.exit))
+                .setMessage(resources.getString(R.string.dialog_cancel_message))
+                .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
+                    leavesRoom()
+                }
+                .setNegativeButton(resources.getString(R.string.no)) { _, _ ->
+                }
+        dialog.show()
+    }
+
+    private fun leavesRoom() {
+        val gameFragment = fragmentManager.findFragmentByTag(gameFragmentTag) as GameFragment
+        toggleGameFragment(isShow = false)
+        mSocket.emit(labelUserLeavesGameRoom, gameFragment.mRoom)
     }
 }

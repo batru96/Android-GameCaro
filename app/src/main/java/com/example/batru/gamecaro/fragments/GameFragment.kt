@@ -15,6 +15,8 @@ import com.github.nkzawa.emitter.Emitter
 import org.json.JSONObject
 
 class GameFragment : BaseFragment() {
+    var mRoom = ""
+
     private val mTagGameFragment = "GameFragment"
     private lateinit var mLinearGame: LinearLayout
     private lateinit var mRootView: View
@@ -30,7 +32,6 @@ class GameFragment : BaseFragment() {
 
     private var isFirst = true
     private var mPlayerState = PlayerState.NOTHING
-    private var mRoom = ""
 
     private val labelSendXAndY = "USER_SEND_X_Y_TO_ROOM"
     private val labelOnListenXAndY = "SERVER_SEND_X_Y_TO_ROOM"
