@@ -5,10 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import com.example.batru.gamecaro.R
-import com.example.batru.gamecaro.`interface`.IUserFragment
 import com.example.batru.gamecaro.fragments.SignInFragment
 import com.example.batru.gamecaro.fragments.SignUpFragment
-import com.example.batru.gamecaro.fragments.UserFragment
 import com.github.nkzawa.emitter.Emitter
 import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
@@ -20,7 +18,6 @@ class LoginActivity : BaseActivity() {
         var mSocket: Socket = IO.socket(IP_ADDRESS)
     }
 
-    private val TAG = "LoginActivity"
     private val labelSignInSuccess = "SERVER_REPLY_SIGN_IN_SUCCESS"
     private val labelSignInFailed = "SERVER_REPLY_SIGN_IN_FAILED"
     private var isSignInFragment = true

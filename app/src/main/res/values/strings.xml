@@ -29,7 +29,8 @@
     <string name="denied_request">Sorry, he/she denied your request</string>
     <string name="fight_now">Fight, now!</string>
     <string name="send_a_request">Send he/she a request?</string>
-    <string name="cannot_send_a_request">You\'re idiot</string>
+    <string name="cannot_send_a_request">Can not invite</string>
     <string name="dialog_cancel_message">The game is playing. Do you really want to lose?</string>
     <string name="toast_you_win_after_leave_room">Oops. He/She leaves your room. You win</string>
+    <string name="you_are_playing">You are playing</string>
 </resources>
