@@ -31,4 +31,5 @@
     <string name="send_a_request">Send he/she a request?</string>
     <string name="cannot_send_a_request">You\'re idiot</string>
     <string name="dialog_cancel_message">The game is playing. Do you really want to lose?</string>
+    <string name="toast_you_win_after_leave_room">Oops. He/She leaves your room. You win</string>
 </resources>

@@ -27,8 +27,6 @@ class UserAdapter(private var context: Context, private var users: ArrayList<Use
         val user = users[position]
         holder!!.tvName.text = user.Name
         holder.tvEmail.text = user.Email
-        val pointsStr = context.resources.getString(R.string.points, user.Points)
-        holder.tvPoints.text = pointsStr
 
         if (user.Playing) {
             holder.itemView.setBackgroundResource(R.drawable.button_un_enable)
@@ -51,7 +49,6 @@ class UserAdapter(private var context: Context, private var users: ArrayList<Use
 
         val tvName: TextView = view.findViewById(R.id.tvUsername)
         val tvEmail: TextView = view.findViewById(R.id.tvUserEmail)
-        val tvPoints: TextView = view.findViewById(R.id.tvPoints)
 
         init {
             view.setOnClickListener(this)

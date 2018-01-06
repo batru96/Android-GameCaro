@@ -9,7 +9,7 @@ open class BaseActivity : AppCompatActivity() {
         val IP_ADDRESS = "http://192.168.20.122:3000"
     }
 
-    fun toast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    fun toast(message: String, type: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(this, message, type).show()
     }
 }

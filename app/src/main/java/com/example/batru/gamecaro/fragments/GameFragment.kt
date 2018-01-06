@@ -1,5 +1,6 @@
 package com.example.batru.gamecaro.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -57,6 +58,17 @@ class GameFragment : BaseFragment() {
             } else if (mPlayerState == PlayerState.NOTHING) {
                 mPlayerState = PlayerState.WAITING
             }
+        }
+    }
+
+    private lateinit var winGameListener: IWinTheGame
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        try {
+            winGameListener = context as IWinTheGame
+        } catch (e: ClassCastException) {
+            Log.d(mTagGameFragment, "Can not cast the activity")
         }
     }
 
@@ -129,7 +141,7 @@ class GameFragment : BaseFragment() {
                 }
                 button.tag = buttonObject.toString()
 
-                isWinner(button)
+                winTheGame(button)
 
                 serverObject.put("room", mRoom)
                 mSocket.emit(labelSendXAndY, serverObject)
@@ -138,9 +150,9 @@ class GameFragment : BaseFragment() {
         }
     }
 
-    private fun isWinner(button: Button) {
+    private fun winTheGame(button: Button) {
         if (isWinningRow(button) || isWinningColumn(button) || isWinningSlash(button) || isWinningBackSlash(button)) {
-            toast(activity, "Thang roi ne")
+            winGameListener.winningTheGame(mRoom)
         }
     }
 
@@ -289,4 +301,7 @@ class GameFragment : BaseFragment() {
         mSocket.off(labelSendXAndY)
     }
 
+    interface IWinTheGame {
+        fun winningTheGame(room: String)
+    }
 }

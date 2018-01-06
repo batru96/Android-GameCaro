@@ -1,12 +1,11 @@
 package com.example.batru.gamecaro.models
 
+import com.example.batru.gamecaro.R.string.points
 import java.io.Serializable
 
-class User(username: String = "", emailAddress: String = "", defaultPoints: Int = 0,
-           isPlaying: Boolean = false, socketId: String = ""): Serializable {
+class User(username: String = "", emailAddress: String = "", isPlaying: Boolean = false, socketId: String = "") : Serializable {
     private var name: String = username
     private var email: String = emailAddress
-    private var points: Int = defaultPoints
     private var playing = isPlaying
     private var id = socketId
 
@@ -22,12 +21,6 @@ class User(username: String = "", emailAddress: String = "", defaultPoints: Int 
             email = value
         }
 
-    var Points: Int
-        get() = points
-        set(value) {
-            points = value
-        }
-
     var Playing: Boolean
         get() = this.playing
         set(value) {
@@ -41,6 +34,6 @@ class User(username: String = "", emailAddress: String = "", defaultPoints: Int 
         }
 
     override fun toString(): String {
-        return "$Name -- $Email -- $Points -- $Playing -- $SocketId"
+        return "$Name -- $Email -- $Playing -- $SocketId"
     }
 }

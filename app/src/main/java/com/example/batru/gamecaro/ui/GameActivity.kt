@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.example.batru.gamecaro.R
 import com.example.batru.gamecaro.`interface`.IUserFragment
 import com.example.batru.gamecaro.fragments.GameFragment
@@ -15,29 +16,31 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class GameActivity : BaseActivity(), IUserFragment {
-    private val tag = "GameActivity"
-    private val gameFragmentTag = "GameFragment"
-
-    private val labelOnUserSignIn = "SERVER_SEND_USER_SIGN_IN_SUCCESS"
-    private val labelOnUserSignOut = "SERVER_SEND_EMAIL_SIGN_OUT"
-    private val labelOnListenRequest = "SERVER_SEND_REQUEST_FROM_A_TO_B"
-    private val labelOnUserLeavesGameRoom ="SERVER_SEND_USER_LEAVES_GAME_ROOM"
-    private val labelSignOut = "USER_SIGN_OUT"
-    private val labelReplyRequest = "USER_B_REPLY_REQUEST"
-    private val labelOnReceiveResultRequest = "SERVER_SEND_REPLY_FROM_B_TO_A"
-    private val labelUserALeaveRoom = "USER_A_LEAVE_ROOM"
-    private val labelUserLeavesGameRoom = "USER_LEAVES_GAME_ROOM"
-
-    private lateinit var mUserFragment: UserFragment
-
+class GameActivity : BaseActivity(), IUserFragment, GameFragment.IWinTheGame {
     companion object {
         var mEmail: String = ""
         val tagBundlePlayerA = "BUNDLE_PLAYER_A"
         val tagBundleRoom = "BUNDLE_ROOM"
     }
 
-    var isPlaying = false
+    private val tag = "GameActivity"
+    private val gameFragmentTag = "GameFragment"
+    private lateinit var mUserFragment: UserFragment
+
+    private val labelOnUserSignIn = "SERVER_SEND_USER_SIGN_IN_SUCCESS"
+    private val labelOnUserSignOut = "SERVER_SEND_EMAIL_SIGN_OUT"
+    private val labelOnListenRequest = "SERVER_SEND_REQUEST_FROM_A_TO_B"
+    private val labelOnUserLeavesGameRoom = "SERVER_SEND_USER_LEAVES_GAME_ROOM"
+    private val labelOnWinningTheGame = "SERVER_SEND_WINNING_THE_GAME"
+
+    private val labelSignOut = "USER_SIGN_OUT"
+    private val labelReplyRequest = "USER_B_REPLY_REQUEST"
+    private val labelOnReceiveResultRequest = "SERVER_SEND_REPLY_FROM_B_TO_A"
+    private val labelUserALeaveRoom = "USER_A_LEAVE_ROOM"
+    private val labelUserLeavesGameRoom = "USER_LEAVES_GAME_ROOM"
+    private val labelWinTheGame = "USER_SEND_WIN_THE_GAME"
+
+    private var isPlaying = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +51,7 @@ class GameActivity : BaseActivity(), IUserFragment {
         mSocket.on(labelOnListenRequest, onListenRequest)
         mSocket.on(labelOnReceiveResultRequest, onReceiveResultRequest)
         mSocket.on(labelOnUserLeavesGameRoom, onUserLeaveGameRoom)
+        mSocket.on(labelOnWinningTheGame, onWinningTheGame)
 
         mUserFragment = fragmentManager.findFragmentById(R.id.fragmentUser) as UserFragment
         updateUserFragment()
@@ -56,7 +60,7 @@ class GameActivity : BaseActivity(), IUserFragment {
     private val onUserLeaveGameRoom = Emitter.Listener {
         runOnUiThread {
             if (isPlaying) {
-                toast("oops. He/She leaves your room. You win")
+                toast(resources.getString(R.string.toast_you_win_after_leave_room), Toast.LENGTH_LONG)
                 leavesRoom()
             }
         }
@@ -129,6 +133,23 @@ class GameActivity : BaseActivity(), IUserFragment {
         }
     }
 
+    private val onWinningTheGame = Emitter.Listener { args ->
+        runOnUiThread {
+            val email = args[0].toString()
+            val dialog = AlertDialog.Builder(this@GameActivity)
+                    .setTitle("The game is over")
+                    .setPositiveButton("OK") {_,_ ->
+                        toggleGameFragment(false)
+                    }
+            if (email == mEmail) {
+                dialog.setMessage("You win!")
+            } else {
+                dialog.setMessage("You're idiot, LOSER!")
+            }
+            dialog.show()
+        }
+    }
+
     private fun toggleGameFragment(isShow: Boolean, isPlayerA: Boolean = true, room: String = "") {
         val transaction = fragmentManager.beginTransaction()
         if (isShow) {
@@ -173,11 +194,9 @@ class GameActivity : BaseActivity(), IUserFragment {
         try {
             val name = obj.getString("name")
             val email = obj.getString("email")
-            val points = obj.getInt("points")
             val socketId = obj.getString("socketId")
             val isPlaying = obj.getBoolean("isPlaying")
-            return User(username = name, emailAddress = email, defaultPoints = points,
-                    isPlaying = isPlaying, socketId = socketId)
+            return User(username = name, emailAddress = email, isPlaying = isPlaying, socketId = socketId)
         } catch (e: JSONException) {
             Log.d(tag, e.message.toString())
         }
@@ -204,6 +223,7 @@ class GameActivity : BaseActivity(), IUserFragment {
         mSocket.off(labelOnReceiveResultRequest)
         mSocket.off(labelOnListenRequest)
         mSocket.off(labelOnUserLeavesGameRoom)
+        mSocket.off(labelOnWinningTheGame)
     }
 
     override fun cancelGame() {
@@ -222,5 +242,9 @@ class GameActivity : BaseActivity(), IUserFragment {
         val gameFragment = fragmentManager.findFragmentByTag(gameFragmentTag) as GameFragment
         toggleGameFragment(isShow = false)
         mSocket.emit(labelUserLeavesGameRoom, gameFragment.mRoom)
+    }
+
+    override fun winningTheGame(room: String) {
+        mSocket.emit(labelWinTheGame, room)
     }
 }
